@@ -1,4 +1,5 @@
 <style>
+  /* This creates the 'Click to Enter' screen */
   #overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -9,7 +10,7 @@
   }
 </style>
 
-<div id="overlay">prout test</div>
+<div id="overlay">Click to Enter</div>
 
 <audio id="myAudio" loop>
   <source src="song.mp3" type="audio/mpeg">
@@ -20,6 +21,7 @@
   const audio = document.getElementById('myAudio');
 
   overlay.addEventListener('click', () => {
-    audio.play(); 
-    overlay.style.display = 'none'; 
+    audio.play(); // Starts the music
+    overlay.style.display = 'none'; // Hides the black screen
+  });
 </script>
