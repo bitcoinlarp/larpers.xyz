@@ -1,33 +1,32 @@
 async function fetchBrawlStats() {
-    const playerTag = "2UJLYCRP0"; // Replace with your tag (no #)
-    const apiKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjM0ZDQxOTNlLTVkZTItNDgxNi1iNjYxLWFlNzNlMjlkNTVjMiIsImlhdCI6MTc3NTY5NjkxNywic3ViIjoiZGV2ZWxvcGVyL2QyMDlkMmYwLTgwNWEtZjQyNi05NTBlLWVkODEyOWJiYzdkOSIsInNjb3BlcyI6WyJicmF3bHN0YXJzIl0sImxpbWl0cyI6W3sidGllciI6ImRldmVsb3Blci9zaWx2ZXIiLCJ0eXBlIjoidGhyb3R0bGluZyJ9LHsiY2lkcnMiOlsiNzQuNTcuMTcyLjgwIl0sInR5cGUiOiJjbGllbnQifV19.0OO-hSrw-ZV2RTrQ3RgshsRJ0dr1NNAw-L2f8TmuJGb_GDElf6DQx4sxq1EavIC9ZR_gz_fsJF62ffVGAuDYXw";
-    
-    // We use a proxy to bypass CORS restrictions
-    const proxyUrl = "https://cors-anywhere.herokuapp.com/"; 
-    const targetUrl = `https://api.brawlstars.com/v1/players/%23${playerTag}`;
+    // 1. Point this to YOUR Vercel deployment URL
+    const vercelUrl = "https://brawl-iota.vercel.app/api/brawl"; 
 
     try {
-        const response = await fetch(proxyUrl + targetUrl, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Accept': 'application/json'
-            }
-        });
+        const response = await fetch(vercelUrl);
 
         if (!response.ok) throw new Error('Dossier access denied.');
 
         const data = await response.json();
         
-        // Update the UI with your real data
-        document.querySelector('.stat-item:nth-child(1) .stat-value').innerText = data.trophies;
-        document.querySelector('.stat-item:nth-child(2) .stat-value').innerText = data.highestTrophies;
-        document.querySelector('.stat-item:nth-child(3) .stat-value').innerText = data['3vs3Victories'];
-        document.querySelector('.stat-item:nth-child(4) .stat-value').innerText = data.club.name || "NO CLUB";
+        // 2. Update the UI using the data from your Vercel bridge
+        // Trophies
+        document.querySelector('.stat-item:nth-child(1) .stat-value').innerText = data.trophies.toLocaleString();
         
-        console.log("Stats Synchronized.");
+        // Highest Trophies
+        document.querySelector('.stat-item:nth-child(2) .stat-value').innerText = data.highestTrophies.toLocaleString();
+        
+        // 3vs3 Victories
+        document.querySelector('.stat-item:nth-child(3) .stat-value').innerText = data['3vs3Victories'].toLocaleString();
+        
+        // Club Name (with a fallback if you aren't in one)
+        document.querySelector('.stat-item:nth-child(4) .stat-value').innerText = data.club?.name || "NO CLUB";
+        
+        console.log("Stats Synchronized via Vercel Bridge.");
     } catch (error) {
         console.error("Fetch Error:", error);
+        // Optional: Show error on the UI
+        document.querySelector('.stat-item:nth-child(1) .stat-value').innerText = "ERR";
     }
 }
 
