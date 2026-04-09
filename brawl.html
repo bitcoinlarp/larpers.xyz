@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAX_RANKED // DOSSIER</title>
+    <title>ELITE_DOSSIER // RIBE</title>
     <style>
         :root {
             --bg-color: #050505;
             --panel-bg: #0d0d0d;
             --accent-color: #ff3e3e; 
             --text-main: #ffffff;
-            --text-dim: #444;
+            --text-dim: #333;
             --border-style: 4px solid #1a1a1a;
         }
 
@@ -24,11 +24,10 @@
             min-height: 100vh;
             margin: 0;
             text-transform: uppercase;
-            overflow: hidden;
         }
 
         .dossier-container {
-            width: 500px; /* Even bigger for the elo stats */
+            width: 520px;
             background: var(--panel-bg);
             border: var(--border-style);
             padding: 40px;
@@ -43,9 +42,9 @@
         }
 
         .header h1 {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             margin: 0;
-            letter-spacing: 6px;
+            letter-spacing: 8px;
             font-weight: 900;
         }
 
@@ -57,12 +56,6 @@
             border: 2px solid var(--accent-color);
             display: inline-block;
             padding: 8px 15px;
-            transition: 0.2s;
-        }
-
-        .status:hover {
-            background: var(--accent-color);
-            color: black;
         }
 
         .stat-item {
@@ -86,15 +79,13 @@
 
         .stat-value {
             font-weight: 900;
-            font-size: 2rem;
+            font-size: 2.2rem;
             color: var(--text-main);
-            text-shadow: 2px 2px 0px #333;
         }
 
         .trophy-icon {
-            width: 45px; /* Bigger PNGs */
+            width: 45px;
             height: auto;
-            image-rendering: pixelated; 
         }
 
         .footer {
@@ -117,12 +108,12 @@
 
     <div class="dossier-container">
         <div class="header">
-            <h1>THREAT_LEVEL</h1>
+            <h1 id="player-name">ID_UNKNOWN</h1>
             <div class="status" id="conn-status" onclick="initializeSystem()">BOOT_SYSTEM</div>
         </div>
 
         <div class="stat-item">
-            <span class="stat-label">CURRENT_TRPY</span>
+            <span class="stat-label">TOTAL_TRPY</span>
             <div class="stat-value-group">
                 <span class="stat-value" id="trophies">----</span>
                 <img src="trophy.webp" alt="TRPY" class="trophy-icon">
@@ -130,32 +121,29 @@
         </div>
 
         <div class="stat-item">
-            <span class="stat-label">PEAK_TRPY</span>
-            <div class="stat-value-group">
-                <span class="stat-value" id="highest">----</span>
-                <img src="trophy.webp" alt="TRPY" class="trophy-icon">
-            </div>
+            <span class="stat-label">PRESTIGE_LVL</span>
+            <span class="stat-value" id="prestige">----</span>
         </div>
 
         <div class="stat-item">
-            <span class="stat-label">RANKED_PEAK</span>
-            <span class="stat-value" id="ranked-elo">----</span>
+            <span class="stat-label">EXP_LEVEL</span>
+            <span class="stat-value" id="exp">----</span>
         </div>
 
         <div class="stat-item">
-            <span class="stat-label">3V3_WINS</span>
+            <span class="stat-label">3V3_VICTORIES</span>
             <span class="stat-value" id="victories">----</span>
         </div>
 
         <div class="footer">
-            SECURE ACCESS // LARPERS.XYZ // NO_GAMES
+            SUBJECT: RIBE // LARPERS.XYZ // NO_GAMES
         </div>
     </div>
 
     <script>
         function initializeSystem() {
             const audio = document.getElementById('bg-music');
-            audio.play().catch(e => console.log("Audio block: Click again"));
+            audio.play().catch(e => console.log("Audio block"));
             fetchBrawlStats();
         }
 
@@ -163,22 +151,20 @@
             const statusEl = document.getElementById('conn-status');
             const vercelUrl = "https://brawl-iota.vercel.app/api/brawl"; 
             
-            statusEl.innerText = "SCRAPING_DATA...";
+            statusEl.innerText = "SCRAPING_VAULT...";
             statusEl.classList.add('blink');
 
             try {
                 const response = await fetch(vercelUrl);
                 const data = await response.json();
                 
-                document.getElementById('trophies').innerText = data.trophies || 0;
-                document.getElementById('highest').innerText = data.highestTrophies || 0;
+                document.getElementById('player-name').innerText = data.name || "RIBE";
+                document.getElementById('trophies').innerText = (data.trophies || 0).toLocaleString();
+                document.getElementById('prestige').innerText = data.totalPrestigeLevel || 0;
+                document.getElementById('exp').innerText = data.expLevel || 0;
+                document.getElementById('victories').innerText = (data['3vs3Victories'] || 0).toLocaleString();
                 
-                // Using highestPowerPlayPoints as the proxy for Ranked Peak
-                document.getElementById('ranked-elo').innerText = data.highestPowerPlayPoints || "0";
-                
-                document.getElementById('victories').innerText = data['3vs3Victories'] || 0;
-                
-                statusEl.innerText = "ENCRYPTED_SYNC";
+                statusEl.innerText = "SYSTEM_SYNCED";
                 statusEl.style.color = "#00ff00"; 
                 statusEl.classList.remove('blink');
 
