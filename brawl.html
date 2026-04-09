@@ -4,18 +4,29 @@ async function fetchBrawlStats() {
         const response = await fetch(vercelUrl);
         if (!response.ok) throw new Error('Dossier access denied.');
         
-        const data = await response.json();
+        const dataArray = await response.json();
         
+        // Since the API returns an array, we pick the first item
+        const data = dataArray;
+        
+        if (!data) throw new Error('No player data found.');
+
         // Updating your UI elements
-        document.querySelector('.stat-item:nth-child(1) .stat-value').innerText = data.trophies.toLocaleString();
-        document.querySelector('.stat-item:nth-child(2) .stat-value').innerText = data.highestTrophies.toLocaleString();
-        document.querySelector('.stat-item:nth-child(3) .stat-value').innerText = data['3vs3Victories'].toLocaleString();
+        // Note: Using '??' or '||' ensures your site doesn't crash if a value is missing
+        document.querySelector('.stat-item:nth-child(1) .stat-value').innerText = (data.trophies || 0).toLocaleString();
+        document.querySelector('.stat-item:nth-child(2) .stat-value').innerText = (data.highestTrophies || 0).toLocaleString();
+        document.querySelector('.stat-item:nth-child(3) .stat-value').innerText = (data['3vs3Victories'] || 0).toLocaleString();
+        
+        // Club data handling
         document.querySelector('.stat-item:nth-child(4) .stat-value').innerText = data.club?.name || "NO CLUB";
         
         console.log("Stats Synchronized.");
     } catch (error) {
         console.error("Fetch Error:", error);
-        document.querySelector('.stat-item:nth-child(1) .stat-value').innerText = "ERR";
+        // Better error feedback for the user
+        const errorDisplays = document.querySelectorAll('.stat-value');
+        errorDisplays.forEach(el => el.innerText = "ERR");
     }
 }
+
 window.onload = fetchBrawlStats;
