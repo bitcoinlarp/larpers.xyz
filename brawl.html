@@ -1,34 +1,21 @@
 async function fetchBrawlStats() {
-    // 1. Point this to YOUR Vercel deployment URL
     const vercelUrl = "https://brawl-iota.vercel.app/api/brawl"; 
-
     try {
         const response = await fetch(vercelUrl);
-
         if (!response.ok) throw new Error('Dossier access denied.');
-
+        
         const data = await response.json();
         
-        // 2. Update the UI using the data from your Vercel bridge
-        // Trophies
+        // Updating your UI elements
         document.querySelector('.stat-item:nth-child(1) .stat-value').innerText = data.trophies.toLocaleString();
-        
-        // Highest Trophies
         document.querySelector('.stat-item:nth-child(2) .stat-value').innerText = data.highestTrophies.toLocaleString();
-        
-        // 3vs3 Victories
         document.querySelector('.stat-item:nth-child(3) .stat-value').innerText = data['3vs3Victories'].toLocaleString();
-        
-        // Club Name (with a fallback if you aren't in one)
         document.querySelector('.stat-item:nth-child(4) .stat-value').innerText = data.club?.name || "NO CLUB";
         
-        console.log("Stats Synchronized via Vercel Bridge.");
+        console.log("Stats Synchronized.");
     } catch (error) {
         console.error("Fetch Error:", error);
-        // Optional: Show error on the UI
         document.querySelector('.stat-item:nth-child(1) .stat-value').innerText = "ERR";
     }
 }
-
-// Run the function when the page loads
 window.onload = fetchBrawlStats;
