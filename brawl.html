@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLAYER DOSSIER // BRAWL</title>
+    <title>OVERSIZED // DOSSIER</title>
     <style>
-        /* TUFF AESTHETIC SETUP */
         :root {
-            --bg-color: #0a0a0a;
-            --panel-bg: #111;
+            --bg-color: #050505;
+            --panel-bg: #0d0d0d;
             --accent-color: #ff3e3e; 
-            --text-main: #e0e0e0;
-            --text-dim: #666;
-            --border-style: 2px solid #333;
+            --text-main: #ffffff;
+            --text-dim: #555;
+            --border-style: 3px solid #222;
         }
 
         body {
@@ -27,35 +26,40 @@
             text-transform: uppercase;
         }
 
+        /* Scaled up the whole container */
         .dossier-container {
-            width: 350px;
+            width: 450px; 
             background: var(--panel-bg);
             border: var(--border-style);
-            padding: 20px;
-            box-shadow: 10px 10px 0px var(--accent-color);
+            padding: 30px;
+            box-shadow: 15px 15px 0px var(--accent-color);
             position: relative;
         }
 
         .header {
             border-bottom: var(--border-style);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
         }
 
         .header h1 {
-            font-size: 1.2rem;
+            font-size: 1.8rem;
             margin: 0;
-            letter-spacing: 2px;
+            letter-spacing: 4px;
         }
 
         .status {
-            font-size: 0.7rem;
+            font-size: 0.9rem;
             color: var(--accent-color);
-            margin-top: 5px;
+            margin-top: 8px;
+            cursor: pointer;
+            border: 1px solid var(--accent-color);
+            display: inline-block;
+            padding: 5px 10px;
         }
 
         .stat-item {
-            margin: 15px 0;
+            margin: 25px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -63,56 +67,56 @@
 
         .stat-label {
             color: var(--text-dim);
-            font-size: 0.8rem;
+            font-size: 1rem;
+            letter-spacing: 1px;
         }
 
         .stat-value-group {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
         }
 
         .stat-value {
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1.6rem; /* Bigger numbers */
             color: var(--text-main);
         }
 
+        /* Bigger Trophy PNG */
         .trophy-icon {
-            width: 22px;
+            width: 35px;
             height: auto;
-            image-rendering: pixelated; /* Keeps the icon sharp */
+            image-rendering: pixelated; 
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.1));
         }
 
         .footer {
-            margin-top: 20px;
-            font-size: 0.6rem;
-            color: #444;
+            margin-top: 30px;
+            font-size: 0.7rem;
+            color: #333;
             text-align: center;
-            letter-spacing: 1px;
-            border-top: 1px solid #222;
-            padding-top: 10px;
+            letter-spacing: 2px;
+            border-top: 1px solid #1a1a1a;
+            padding-top: 15px;
         }
 
-        .blink {
-            animation: blinker 1s linear infinite;
-        }
-
-        @keyframes blinker {
-            50% { opacity: 0; }
-        }
+        .blink { animation: blinker 0.8s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
 
+    <audio id="bg-music" src="unhappy.mp3" loop></audio>
+
     <div class="dossier-container">
         <div class="header">
-            <h1>PLAYER_STATS</h1>
-            <div class="status" id="conn-status">SYSTEM_LIVE</div>
+            <h1>DATA_EXPANSION</h1>
+            <div class="status" id="conn-status" onclick="initializeSystem()">INITIALIZE_SYSTEM</div>
         </div>
 
         <div class="stat-item">
-            <span class="stat-label">TROPHIES</span>
+            <span class="stat-label">CURRENT_TRPY</span>
             <div class="stat-value-group">
                 <span class="stat-value" id="trophies">----</span>
                 <img src="trophy.webp" alt="TRPY" class="trophy-icon">
@@ -120,58 +124,66 @@
         </div>
 
         <div class="stat-item">
-            <span class="stat-label">PEAK_TROPHIES</span>
-            <span class="stat-value" id="highest">----</span>
+            <span class="stat-label">PEAK_TRPY</span>
+            <div class="stat-value-group">
+                <span class="stat-value" id="highest">----</span>
+                <img src="trophy.webp" alt="TRPY" class="trophy-icon">
+            </div>
         </div>
 
         <div class="stat-item">
-            <span class="stat-label">3V3_WINS</span>
+            <span class="stat-label">3V3_COMBAT</span>
             <span class="stat-value" id="victories">----</span>
         </div>
 
         <div class="stat-item">
-            <span class="stat-label">CLUB_ID</span>
+            <span class="stat-label">GUILD_UNIT</span>
             <span class="stat-value" id="club">----</span>
         </div>
 
         <div class="footer">
-            UNAUTHORIZED ACCESS PROHIBITED // LARPERS.XYZ
+            SECURE ACCESS // LARPERS.XYZ // NO_GAMES
         </div>
     </div>
 
     <script>
+        function initializeSystem() {
+            // Play audio on click (browser requirement)
+            const audio = document.getElementById('bg-music');
+            audio.play().catch(e => console.log("Audio block: Click again"));
+            
+            // Start the fetch
+            fetchBrawlStats();
+        }
+
         async function fetchBrawlStats() {
             const statusEl = document.getElementById('conn-status');
             const vercelUrl = "https://brawl-iota.vercel.app/api/brawl"; 
             
-            statusEl.innerText = "SYNCING...";
+            statusEl.innerText = "ACCESSING_VAULT...";
             statusEl.classList.add('blink');
 
             try {
                 const response = await fetch(vercelUrl);
-                if (!response.ok) throw new Error('AUTH_FAILED');
+                if (!response.ok) throw new Error('AUTH_ERR');
                 
                 const data = await response.json();
                 
                 document.getElementById('trophies').innerText = (data.trophies || 0).toLocaleString();
                 document.getElementById('highest').innerText = (data.highestTrophies || 0).toLocaleString();
                 document.getElementById('victories').innerText = (data['3vs3Victories'] || 0).toLocaleString();
-                document.getElementById('club').innerText = data.club?.name || "REDACTED";
+                document.getElementById('club').innerText = data.club?.name || "LONE_WOLF";
                 
-                statusEl.innerText = "SYNC_COMPLETE";
+                statusEl.innerText = "SYSTEM_SYNCED";
                 statusEl.style.color = "#00ff00"; 
                 statusEl.classList.remove('blink');
 
             } catch (error) {
-                console.error("Dossier Breach:", error);
-                statusEl.innerText = "CRITICAL_ERROR";
+                statusEl.innerText = "TERMINAL_FAILURE";
                 statusEl.style.color = "red";
-                
-                document.querySelectorAll('.stat-value').forEach(el => el.innerText = "ERROR");
+                document.querySelectorAll('.stat-value').forEach(el => el.innerText = "FAIL");
             }
         }
-
-        window.onload = fetchBrawlStats;
     </script>
 </body>
 </html>
