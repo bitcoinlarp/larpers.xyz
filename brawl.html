@@ -1,37 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Brawl Stats</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLAYER DOSSIER // BRAWL</title>
+    <style>
+        /* TUFF AESTHETIC SETUP */
+        :root {
+            --bg-color: #0a0a0a;
+            --panel-bg: #111;
+            --accent-color: #ff3e3e; /* Aggressive Red */
+            --text-main: #e0e0e0;
+            --text-dim: #666;
+            --border-style: 2px solid #333;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .dossier-container {
+            width: 350px;
+            background: var(--panel-bg);
+            border: var(--border-style);
+            padding: 20px;
+            box-shadow: 10px 10px 0px var(--accent-color);
+            position: relative;
+        }
+
+        .header {
+            border-bottom: var(--border-style);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 1.2rem;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        .header .status {
+            font-size: 0.7rem;
+            color: var(--accent-color);
+        }
+
+        .stat-item {
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-label {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 0.6rem;
+            color: #444;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        /* Loading blink effect */
+        .blink {
+            animation: blinker 1s linear infinite;
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="stat-item">Trophies: <span class="stat-value">Loading...</span></div>
-    <div class="stat-item">Highest Trophies: <span class="stat-value">Loading...</span></div>
-    <div class="stat-item">3vs3 Victories: <span class="stat-value">Loading...</span></div>
-    <div class="stat-item">Club: <span class="stat-value">Loading...</span></div>
+    <div class="dossier-container">
+        <div class="header">
+            <h1>PLAYER_STATS</h1>
+            <div class="status" id="conn-status">SYSTEM_LIVE</div>
+        </div>
+
+        <div class="stat-item">
+            <span class="stat-label">TROPHIES</span>
+            <span class="stat-value" id="trophies">----</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">PEAK_TROPHIES</span>
+            <span class="stat-value" id="highest">----</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">3V3_WINS</span>
+            <span class="stat-value" id="victories">----</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">CLUN_ID</span>
+            <span class="stat-value" id="club">----</span>
+        </div>
+
+        <div class="footer">
+            UNAUTHORIZED ACCESS PROHIBITED // LARPERS.XYZ
+        </div>
+    </div>
 
     <script>
         async function fetchBrawlStats() {
+            const statusEl = document.getElementById('conn-status');
             const vercelUrl = "https://brawl-iota.vercel.app/api/brawl"; 
+            
+            statusEl.innerText = "SYNCING...";
+            statusEl.classList.add('blink');
+
             try {
                 const response = await fetch(vercelUrl);
-                if (!response.ok) throw new Error('Access denied.');
+                if (!response.ok) throw new Error('AUTH_FAILED');
                 
-                const dataArray = await response.json();
-                const data = dataArray; // Access the first player in the array
+                const data = await response.json();
                 
-                if (!data) throw new Error('No player data found.');
+                // Direct updates by ID is cleaner for "tuff" code
+                document.getElementById('trophies').innerText = (data.trophies || 0).toLocaleString();
+                document.getElementById('highest').innerText = (data.highestTrophies || 0).toLocaleString();
+                document.getElementById('victories').innerText = (data['3vs3Victories'] || 0).toLocaleString();
+                document.getElementById('club').innerText = data.club?.name || "REDACTED";
+                
+                statusEl.innerText = "SYNC_COMPLETE";
+                statusEl.style.color = "#00ff00"; // Green for success
+                statusEl.classList.remove('blink');
 
-                // Update UI
-                document.querySelector('.stat-item:nth-child(1) .stat-value').innerText = (data.trophies || 0).toLocaleString();
-                document.querySelector('.stat-item:nth-child(2) .stat-value').innerText = (data.highestTrophies || 0).toLocaleString();
-                document.querySelector('.stat-item:nth-child(3) .stat-value').innerText = (data['3vs3Victories'] || 0).toLocaleString();
-                document.querySelector('.stat-item:nth-child(4) .stat-value').innerText = data.club?.name || "NO CLUB";
-                
-                console.log("Stats Synchronized.");
             } catch (error) {
-                console.error("Fetch Error:", error);
-                document.querySelectorAll('.stat-value').forEach(el => el.innerText = "ERR");
+                console.error("Dossier Breach:", error);
+                statusEl.innerText = "CRITICAL_ERROR";
+                statusEl.style.color = "red";
+                
+                const values = document.querySelectorAll('.stat-value');
+                values.forEach(el => el.innerText = "ERROR");
             }
         }
 
