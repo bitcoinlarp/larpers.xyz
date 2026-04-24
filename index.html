@@ -9,8 +9,8 @@
         :root {
             --primary: #ffffff;
             --accent: #ff0000; 
-            --bg: #0a0a0a;
-            --glass: rgba(0, 0, 0, 0.7);
+            --bg: #000000;
+            --glass: rgba(0, 0, 0, 0.5); /* Plus transparent pour voir la vidéo derrière */
         }
 
         body, html {
@@ -18,7 +18,7 @@
             padding: 0;
             background-color: var(--bg);
             color: var(--primary);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', sans-serif;
             height: 100%;
             overflow: hidden;
             display: flex;
@@ -26,29 +26,30 @@
             justify-content: center;
         }
 
-        /* Video Background */
+        /* Vidéo de fond - Correction de la luminosité */
         .video-background {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            transform: translate(-50%, -50%);
             z-index: -1;
-            filter: brightness(0.35) contrast(1.2);
+            filter: brightness(0.7) contrast(1.1); /* Augmenté de 0.35 à 0.7 */
             object-fit: cover;
         }
 
-        /* CRT/Scanline Overlay Effect */
+        /* Overlay léger pour la texture */
         .overlay-fx {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-            background-size: 100% 3px;
+            background: linear-gradient(rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.4) 50%);
+            background-size: 100% 4px;
             z-index: 10;
             pointer-events: none;
+            opacity: 0.3;
         }
 
-        /* Initial Enter Screen */
         #overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -58,79 +59,71 @@
             justify-content: center;
             cursor: pointer;
             z-index: 100;
-            transition: opacity 1s ease;
+            transition: opacity 0.8s ease;
         }
 
-        /* Central Card */
         .main-content {
             text-align: center;
             z-index: 20;
             background: var(--glass);
-            padding: 40px 60px;
-            border-radius: 4px;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-            position: relative;
+            padding: 40px 50px;
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
 
         .founder-tag {
             color: var(--accent);
-            font-size: 13px;
-            font-weight: 800;
-            margin-bottom: 4px;
-            letter-spacing: 2px;
+            font-size: 14px;
+            font-weight: 900;
+            margin-bottom: 5px;
+            letter-spacing: 3px;
             text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
         }
 
         .sub-tag {
-            color: #777;
+            color: #bbb;
             font-size: 11px;
             margin-bottom: 30px;
             letter-spacing: 1px;
         }
 
-        /* Social Icon Layout */
         .social-icons {
             display: flex;
             justify-content: center;
-            gap: 28px;
+            gap: 25px;
         }
 
         .social-icons a {
             color: #fff;
-            font-size: 22px;
+            font-size: 24px;
             text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0.6;
+            transition: 0.3s;
+            opacity: 0.8;
             position: relative;
         }
 
         .social-icons a:hover {
             opacity: 1;
             color: var(--accent);
-            transform: scale(1.2);
-            text-shadow: 0 0 15px var(--accent);
+            transform: scale(1.1);
         }
 
-        /* Tooltip styling for Discord copy */
         #tooltip {
             visibility: hidden;
             background-color: var(--accent);
             color: #000;
-            text-align: center;
             padding: 4px 8px;
-            border-radius: 2px;
             position: absolute;
-            z-index: 30;
             bottom: 150%;
             left: 50%;
-            margin-left: -35px;
+            transform: translateX(-50%);
             font-size: 10px;
             font-weight: bold;
             opacity: 0;
-            transition: opacity 0.3s;
-            text-transform: uppercase;
+            transition: 0.3s;
         }
 
         #tooltip.show {
@@ -139,14 +132,13 @@
         }
 
         .glitch {
-            letter-spacing: 6px;
-            font-weight: bold;
-            animation: pulse 1.5s infinite;
+            letter-spacing: 5px;
+            animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 0.2; }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
     </style>
 </head>
@@ -155,7 +147,7 @@
 <div class="overlay-fx"></div>
 
 <div id="overlay">
-    <div class="glitch" style="color: var(--accent); text-transform: uppercase;">[ Click to Initialize ]</div>
+    <div class="glitch" style="color: var(--accent);">[ INITIALISER ]</div>
 </div>
 
 <video autoplay muted loop playsinline class="video-background">
@@ -167,15 +159,14 @@
     <div class="sub-tag">Automotive // Creative</div>
     
     <div class="social-icons">
-        <a href="javascript:void(0)" onclick="copyDiscord(this)" title="Copy Discord">
+        <a href="javascript:void(0)" onclick="copyDiscord(this)">
             <i class="fab fa-discord"></i>
-            <span id="tooltip">Copied!</span>
+            <span id="tooltip">Copié !</span>
         </a>
-        
-        <a href="#" target="_blank" title="Roblox"><i class="fas fa-gamepad"></i></a>
-        <a href="#" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
-        <a href="#" target="_blank" title="Ethereum"><i class="fab fa-ethereum"></i></a>
-        <a href="#" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+        <a href="#"><i class="fas fa-gamepad"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="#"><i class="fab fa-ethereum"></i></a>
+        <a href="#"><i class="fab fa-telegram"></i></a>
     </div>
 </div>
 
@@ -187,28 +178,17 @@
     const overlay = document.getElementById('overlay');
     const audio = document.getElementById('myAudio');
 
-    // Handle Entry
     overlay.addEventListener('click', () => {
         audio.play();
         overlay.style.opacity = '0';
-        setTimeout(() => {
-            overlay.style.display = 'none';
-        }, 1000);
+        setTimeout(() => { overlay.style.display = 'none'; }, 800);
     });
 
-    // Copy Discord Function
     function copyDiscord(element) {
-        const discordTag = "@ritabeagle";
-        
-        navigator.clipboard.writeText(discordTag).then(() => {
+        navigator.clipboard.writeText("@ritabeagle").then(() => {
             const tooltip = document.getElementById('tooltip');
             tooltip.classList.add('show');
-            
-            setTimeout(() => {
-                tooltip.classList.remove('show');
-            }, 2000);
-        }).catch(err => {
-            console.error('Copy failed: ', err);
+            setTimeout(() => { tooltip.classList.remove('show'); }, 2000);
         });
     }
 </script>
