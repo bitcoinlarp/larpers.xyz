@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RIBE // OFFICIAL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #fff;
+            --primary: #ffffff;
             --accent: #ff0000; 
-            --bg: #050505;
+            --bg: #0a0a0a;
+            --glass: rgba(0, 0, 0, 0.6);
         }
 
         body, html {
@@ -16,7 +18,7 @@
             padding: 0;
             background-color: var(--bg);
             color: var(--primary);
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             height: 100%;
             overflow: hidden;
             display: flex;
@@ -24,15 +26,30 @@
             justify-content: center;
         }
 
-        /* Scanline Overlay Effect */
-        body::before {
-            content: " ";
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 4px, 3px 100%;
-            z-index: 2;
+        /* Video/Image Background */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            filter: brightness(0.4) contrast(1.1);
+        }
+
+        .bg-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* CRT/Scanline Overlay */
+        .overlay-fx {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 3px;
+            z-index: 10;
             pointer-events: none;
         }
 
@@ -41,101 +58,95 @@
             top: 0; left: 0; width: 100%; height: 100%;
             background: #000;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            cursor: crosshair;
+            cursor: pointer;
             z-index: 100;
-            transition: opacity 0.8s ease;
-        }
-
-        .glitch {
-            font-size: 28px;
-            font-weight: bold;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
+            transition: opacity 1s ease;
         }
 
         .main-content {
             text-align: center;
-            z-index: 1;
-            width: 90%;
-            max-width: 500px;
+            z-index: 20;
+            background: var(--glass);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        img {
-            max-width: 100%;
-            height: auto;
-            filter: grayscale(100%) contrast(120%);
-            transition: filter 0.3s ease;
-            border: 1px solid #222;
-        }
-
-        img:hover {
-            filter: grayscale(0%) contrast(100%);
-            border-color: var(--accent);
-        }
-
-        .caption {
-            margin: 20px 0;
-            font-size: 12px;
-            letter-spacing: 2px;
-            color: #666;
-            text-transform: uppercase;
-        }
-
-        .socials {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .social-link {
-            text-decoration: none;
-            color: var(--primary);
-            border: 1px solid #222;
-            padding: 10px;
+        .founder-tag {
+            color: var(--accent);
             font-size: 14px;
-            transition: all 0.2s ease;
+            font-weight: bold;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            background: rgba(255, 255, 255, 0.02);
-            position: relative;
-            overflow: hidden;
         }
 
-        .social-link:hover {
-            background: var(--accent);
-            color: #000;
-            border-color: var(--accent);
-            box-shadow: 0 0 15px var(--accent);
-            transform: skewX(-2deg); /* Added a slight tuff tilt */
+        .sub-tag {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 25px;
         }
 
+        /* Icon Row Styles */
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 10px;
+        }
+
+        .social-icons a {
+            color: #fff;
+            font-size: 24px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .social-icons a:hover {
+            opacity: 1;
+            color: var(--accent);
+            transform: translateY(-3px);
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        .glitch {
+            letter-spacing: 8px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.98); }
+        }
     </style>
 </head>
 <body>
 
+<div class="overlay-fx"></div>
+
 <div id="overlay">
-    <div class="glitch">[ ACCESS GRANTED? ]</div>
+    <div class="glitch" style="color: var(--accent);">[ CLICK TO ENTER ]</div>
+</div>
+
+<div class="bg-container">
+    <img src="YOUR_CAR_IMAGE.jpg" alt="background">
 </div>
 
 <div class="main-content">
-    <img src="tung.gif" alt="main-visual">
-    <div class="caption">ribe // socials</div>
+    <div class="founder-tag">Founder @ #RIBE</div>
+    <div class="sub-tag">Automotive & Digital Arts</div>
     
-    <div class="socials">
-        <a href="#" class="social-link">Discord // ribe_community</a>
-        <a href="brawl.html" class="social-link">Brawl Stars // Profile</a>
-        <a href="#" class="social-link">Cryptos // ETH / SOL</a>
-        <a href="#" class="social-link">Etc // Info</a>
+    <div class="social-icons">
+        <a href="#" title="Discord"><i class="fab fa-discord"></i></a>
+        <a href="#" title="Roblox"><i class="fas fa-gamepad"></i></a>
+        <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="#" title="Crypto/Ethereum"><i class="fab fa-ethereum"></i></a>
+        <a href="#" title="Telegram"><i class="fab fa-telegram"></i></a>
     </div>
 </div>
 
@@ -152,7 +163,7 @@
         overlay.style.opacity = '0';
         setTimeout(() => {
             overlay.style.display = 'none';
-        }, 800);
+        }, 1000);
     });
 </script>
 
