@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>larpers.xyz</title>
+    <title>RIBE // OFFICIAL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -18,31 +18,35 @@
             background-color: var(--bg);
             color: var(--primary);
             font-family: 'Inter', sans-serif;
-            height: 100%;
+            height: 100vh;
+            width: 100vw;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* Vidéo de fond */
-        .video-background {
+        /* FIX POUR LES BANDES NOIRES : On force la vidéo à remplir tout l'écran */
+        .video-container {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 100vw;
-            height: 100vh;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
-            filter: brightness(0.8) contrast(1.1); 
-            object-fit: cover;
         }
 
-        /* Overlay FX - désactivé ou très léger pour ne pas boucher la vue */
+        .video-background {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* C'est ça qui va supprimer les bandes noires ! */
+            filter: brightness(0.8) contrast(1.1);
+        }
+
         .overlay-fx {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, transparent 20%, black 150%);
+            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.4) 150%);
             z-index: 10;
             pointer-events: none;
         }
@@ -59,12 +63,10 @@
             transition: opacity 0.8s ease;
         }
 
-        /* Boîte centrale - Fond supprimé pour éviter le "truc noir" */
         .main-content {
             text-align: center;
             z-index: 20;
-            background: transparent; /* Suppression du fond noir */
-            padding: 20px;
+            background: transparent;
         }
 
         .founder-tag {
@@ -74,7 +76,7 @@
             margin-bottom: 5px;
             letter-spacing: 4px;
             text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(255, 0, 0, 0.8); /* Lueur pour lisibilité */
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
         }
 
         .sub-tag {
@@ -82,7 +84,7 @@
             font-size: 11px;
             margin-bottom: 30px;
             letter-spacing: 2px;
-            text-shadow: 0 0 8px rgba(0, 0, 0, 1);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
 
         .social-icons {
@@ -96,13 +98,12 @@
             font-size: 26px;
             text-decoration: none;
             transition: 0.3s;
-            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
+            filter: drop-shadow(0 0 8px rgba(0,0,0,0.8));
         }
 
         .social-icons a:hover {
             color: var(--accent);
             transform: scale(1.2);
-            filter: drop-shadow(0 0 15px var(--accent));
         }
 
         #tooltip {
@@ -120,20 +121,10 @@
             transition: 0.3s;
         }
 
-        #tooltip.show {
-            visibility: visible;
-            opacity: 1;
-        }
+        #tooltip.show { visibility: visible; opacity: 1; }
 
-        .glitch {
-            letter-spacing: 5px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
+        .glitch { animation: pulse 2s infinite; letter-spacing: 5px; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body>
@@ -144,9 +135,11 @@
     <div class="glitch" style="color: var(--accent);">[ CLICK TO START ]</div>
 </div>
 
-<video autoplay muted loop playsinline class="video-background">
-    <source src="https://r2.guns.lol/aa29fb22-f7cd-49ad-b346-e0ff98f25e55.mp4" type="video/mp4">
-</video>
+<div class="video-container">
+    <video autoplay muted loop playsinline class="video-background">
+        <source src="https://r2.guns.lol/aa29fb22-f7cd-49ad-b346-e0ff98f25e55.mp4" type="video/mp4">
+    </video>
+</div>
 
 <div class="main-content">
     <div class="founder-tag">Founder @ #RIBE</div>
