@@ -1,215 +1,381 @@
 <!DOCTYPE html>
-<html lang="fr">
+
+<html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>RIBE // OFFICIAL</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+
         :root {
+
             --primary: #ffffff;
+
             --accent: #ff0000; 
+
             --bg: #000000;
+
         }
+
+
 
         body, html {
+
             margin: 0;
+
             padding: 0;
+
             background-color: var(--bg);
+
             color: var(--primary);
+
             font-family: 'Inter', sans-serif;
+
             height: 100%;
-            width: 100%;
+
             overflow: hidden;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
         }
 
-        /* CORRECTION VIDÉO : Plein écran garanti sans bandes */
+
+
+        /* Vidéo de fond */
+
         .video-background {
+
             position: fixed;
+
             top: 50%;
+
             left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            z-index: -1;
+
+            width: 100vw;
+
+            height: 100vh;
+
             transform: translate(-50%, -50%);
-            object-fit: cover; /* Remplit l'espace en recadrant si nécessaire */
-            filter: brightness(0.7) contrast(1.1); 
+
+            z-index: -1;
+
+            filter: brightness(0.8) contrast(1.1); 
+
+            object-fit: cover;
+
         }
 
-        /* Overlay FX - Léger vignetage */
+
+
+        /* Overlay FX - désactivé ou très léger pour ne pas boucher la vue */
+
         .overlay-fx {
+
             position: fixed;
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 150%);
-            z-index: 1;
+
+            top: 0; left: 0; width: 100%; height: 100%;
+
+            background: radial-gradient(circle, transparent 20%, black 150%);
+
+            z-index: 10;
+
             pointer-events: none;
+
         }
 
-        /* Écran de démarrage */
+
+
         #overlay {
+
             position: fixed;
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
+
+            top: 0; left: 0; width: 100%; height: 100%;
+
             background: #000;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             cursor: pointer;
+
             z-index: 100;
-            transition: opacity 0.8s ease, visibility 0.8s;
+
+            transition: opacity 0.8s ease;
+
         }
+
+
+
+        /* Boîte centrale - Fond supprimé pour éviter le "truc noir" */
 
         .main-content {
+
             text-align: center;
+
             z-index: 20;
-            background: transparent;
+
+            background: transparent; /* Suppression du fond noir */
+
             padding: 20px;
+
         }
+
+
 
         .founder-tag {
+
             color: var(--accent);
+
             font-size: 14px;
+
             font-weight: 900;
+
             margin-bottom: 5px;
+
             letter-spacing: 4px;
+
             text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.8); /* Lueur pour lisibilité */
+
         }
+
+
 
         .sub-tag {
+
             color: #ffffff;
+
             font-size: 11px;
+
             margin-bottom: 30px;
+
             letter-spacing: 2px;
+
             text-shadow: 0 0 8px rgba(0, 0, 0, 1);
+
         }
+
+
 
         .social-icons {
+
             display: flex;
+
             justify-content: center;
+
             gap: 30px;
+
         }
+
+
 
         .social-icons a {
+
             color: #fff;
+
             font-size: 26px;
+
             text-decoration: none;
+
             transition: 0.3s;
+
             filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
-            position: relative;
+
         }
+
+
 
         .social-icons a:hover {
+
             color: var(--accent);
+
             transform: scale(1.2);
+
             filter: drop-shadow(0 0 15px var(--accent));
+
         }
 
-        /* Tooltip Discord */
+
+
         #tooltip {
+
             visibility: hidden;
+
             background-color: var(--accent);
+
             color: #000;
+
             padding: 4px 8px;
+
             position: absolute;
+
             bottom: 150%;
+
             left: 50%;
+
             transform: translateX(-50%);
+
             font-size: 10px;
+
             font-weight: bold;
+
             opacity: 0;
+
             transition: 0.3s;
-            white-space: nowrap;
+
         }
+
+
 
         #tooltip.show {
+
             visibility: visible;
+
             opacity: 1;
+
         }
+
+
 
         .glitch {
+
             letter-spacing: 5px;
+
             animation: pulse 2s infinite;
-            font-weight: bold;
-            text-transform: uppercase;
+
         }
 
+
+
         @keyframes pulse {
+
             0%, 100% { opacity: 1; }
+
             50% { opacity: 0.3; }
+
         }
+
     </style>
+
 </head>
+
 <body>
+
+
 
 <div class="overlay-fx"></div>
 
+
+
 <div id="overlay">
+
     <div class="glitch" style="color: var(--accent);">[ CLICK TO START ]</div>
+
 </div>
 
-<video id="bgVideo" preload="auto" loop muted playsinline class="video-background">
+
+
+<video autoplay muted loop playsinline class="video-background">
+
     <source src="https://r2.guns.lol/aa29fb22-f7cd-49ad-b346-e0ff98f25e55.mp4" type="video/mp4">
+
 </video>
 
+
+
 <div class="main-content">
+
     <div class="founder-tag">Founder @ #RIBE</div>
+
     <div class="sub-tag">Automotive // Creative</div>
+
     
+
     <div class="social-icons">
-        <a href="javascript:void(0)" onclick="copyDiscord(this)">
+
+        <a href="javascript:void(0)" onclick="copyDiscord(this)" style="position: relative;">
+
             <i class="fab fa-discord"></i>
+
             <span id="tooltip">Copied!</span>
+
         </a>
+
         <a href="#"><i class="fas fa-gamepad"></i></a>
+
         <a href="#"><i class="fab fa-youtube"></i></a>
+
         <a href="#"><i class="fab fa-ethereum"></i></a>
+
         <a href="#"><i class="fab fa-telegram"></i></a>
+
     </div>
+
 </div>
 
+
+
 <audio id="myAudio" loop>
+
     <source src="unhappy.mp3" type="audio/mpeg">
+
 </audio>
 
+
+
 <script>
+
     const overlay = document.getElementById('overlay');
+
     const audio = document.getElementById('myAudio');
-    const video = document.getElementById('bgVideo');
+
+
 
     overlay.addEventListener('click', () => {
-        // Lancement de l'audio et de la vidéo au clic
-        audio.play().catch(e => console.log("Audio play blocked"));
-        video.muted = false; // Optionnel : enlever le mute de la vidéo si elle a du son
-        video.play();
+
+        audio.play();
 
         overlay.style.opacity = '0';
-        setTimeout(() => { 
-            overlay.style.visibility = 'hidden'; 
-        }, 800);
+
+        setTimeout(() => { overlay.style.display = 'none'; }, 800);
+
     });
 
+
+
     function copyDiscord(element) {
-        const discordTag = "@ritabeagle";
-        navigator.clipboard.writeText(discordTag).then(() => {
+
+        navigator.clipboard.writeText("@ritabeagle").then(() => {
+
             const tooltip = document.getElementById('tooltip');
+
             tooltip.classList.add('show');
-            setTimeout(() => { 
-                tooltip.classList.remove('show'); 
-            }, 2000);
+
+            setTimeout(() => { tooltip.classList.remove('show'); }, 2000);
+
         });
+
     }
+
 </script>
 
+
+
 </body>
+
 </html>
