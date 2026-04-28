@@ -27,6 +27,7 @@
             justify-content: center;
         }
 
+        /* Vidéo en arrière-plan */
         #bgVideo {
             position: fixed;
             top: 50%;
@@ -35,22 +36,24 @@
             min-height: 100%;
             width: auto;
             height: auto;
-            z-index: -100;
+            z-index: -2;
             transform: translate(-50%, -50%);
             object-fit: cover;
-            filter: brightness(0.6) contrast(1.1); /* Légèrement plus sombre pour la lisibilité */
+            filter: brightness(0.6);
             background-color: black;
         }
 
+        /* Overlay de lignes (scanlines) */
         .overlay-fx {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
             background-size: 100% 4px;
-            z-index: 1;
-            pointer-events: none; /* Important pour cliquer à travers */
+            z-index: -1;
+            pointer-events: none;
         }
 
+        /* Écran de démarrage */
         #overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -60,13 +63,12 @@
             justify-content: center;
             cursor: pointer;
             z-index: 1000;
-            transition: opacity 1s ease, visibility 1s;
+            transition: opacity 0.8s ease;
         }
 
         .main-content {
             text-align: center;
-            z-index: 100;
-            background: transparent;
+            z-index: 10;
             position: relative;
         }
 
@@ -86,41 +88,41 @@
             margin-bottom: 30px;
             letter-spacing: 2px;
             text-shadow: 0 0 10px rgba(0,0,0,1);
-            opacity: 0.8;
+            opacity: 0.7;
         }
 
         .social-icons {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 25px;
         }
 
         .social-icons a {
             color: #fff;
-            font-size: 26px;
+            font-size: 24px;
             text-decoration: none;
             transition: 0.3s ease;
-            filter: drop-shadow(0 0 10px rgba(0,0,0,1));
             position: relative;
             display: inline-block;
         }
 
         .social-icons a:hover {
             color: var(--accent);
-            transform: scale(1.2);
+            transform: scale(1.15);
         }
 
+        /* Tooltip pour la copie Discord */
         #tooltip {
             visibility: hidden;
             background-color: var(--accent);
             color: #000;
             padding: 4px 10px;
             position: absolute;
-            bottom: 150%;
+            bottom: 160%;
             left: 50%;
             transform: translateX(-50%);
             font-size: 10px;
-            font-weight: bold;
+            font-weight: 900;
             white-space: nowrap;
             border-radius: 2px;
             opacity: 0;
@@ -129,20 +131,20 @@
 
         #tooltip.show { visibility: visible; opacity: 1; }
 
-        .glitch { animation: pulse 2s infinite; letter-spacing: 5px; font-weight: bold; }
+        .glitch { animation: pulse 1.5s infinite; letter-spacing: 3px; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body>
 
-<video muted loop playsinline id="bgVideo">
+<video muted loop playsinline id="bgVideo" preload="auto">
     <source src="https://r2.guns.lol/aa29fb22-f7cd-49ad-b346-e0ff98f25e55.mp4" type="video/mp4">
 </video>
 
 <div class="overlay-fx"></div>
 
 <div id="overlay">
-    <div id="statusText" class="glitch" style="color: var(--accent);">[ LOADING... ]</div>
+    <div id="statusText" class="glitch" style="color: var(--accent);">[ CLICK TO ENTER ]</div>
 </div>
 
 <div class="main-content">
@@ -167,29 +169,31 @@
 
 <script>
     const overlay = document.getElementById('overlay');
-    const statusText = document.getElementById('statusText');
     const audio = document.getElementById('myAudio');
     const video = document.getElementById('bgVideo');
 
-    // Mise à jour du texte quand la vidéo est prête
-    video.addEventListener('canplaythrough', () => {
-        statusText.innerText = "[ CLICK TO ENTER ]";
+    // On lance la vidéo en muet dès qu'on peut pour qu'elle soit déjà en train de jouer derrière le noir
+    video.play().catch(() => {
+        console.log("Lecture auto bloquée, elle démarrera au clic.");
     });
 
     overlay.addEventListener('click', () => {
-        // On démute la vidéo et on lance l'audio au clic
+        // Au clic, on active le son et on s'assure que la vidéo joue
         video.muted = false; 
-        video.play();
-        audio.play().catch(e => console.log("Audio play blocked"));
+        video.play(); 
+        
+        audio.volume = 0.5; // Ajuste le volume ici (0.0 à 1.0)
+        audio.play().catch(e => console.log("Audio bloqué par le navigateur"));
         
         overlay.style.opacity = '0';
         setTimeout(() => { 
-            overlay.style.visibility = 'hidden'; 
-        }, 1000);
+            overlay.style.display = 'none'; 
+        }, 800);
     });
 
     function copyDiscord(element) {
-        const discordTag = "@ritabeagle"; // Ton tag
+        // Remplace par ton vrai tag si besoin
+        const discordTag = "@ritabeagle"; 
         navigator.clipboard.writeText(discordTag).then(() => {
             const tooltip = document.getElementById('tooltip');
             tooltip.classList.add('show');
