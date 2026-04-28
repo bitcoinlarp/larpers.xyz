@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RIBE // OFFICIAL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -19,16 +18,16 @@
             background-color: var(--bg);
             color: var(--primary);
             font-family: 'Inter', sans-serif;
-            height: 100vh;
-            width: 100vw;
+            height: 100%;
+            width: 100%;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* Vidéo en arrière-plan */
-        #bgVideo {
+        /* CORRECTION VIDÉO : Plein écran garanti sans bandes */
+        .video-background {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -36,40 +35,45 @@
             min-height: 100%;
             width: auto;
             height: auto;
-            z-index: -2;
+            z-index: -1;
             transform: translate(-50%, -50%);
-            object-fit: cover;
-            filter: brightness(0.6);
-            background-color: black;
+            object-fit: cover; /* Remplit l'espace en recadrant si nécessaire */
+            filter: brightness(0.7) contrast(1.1); 
         }
 
-        /* Overlay de lignes (scanlines) */
+        /* Overlay FX - Léger vignetage */
         .overlay-fx {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
-            background-size: 100% 4px;
-            z-index: -1;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 150%);
+            z-index: 1;
             pointer-events: none;
         }
 
         /* Écran de démarrage */
         #overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
             background: #000;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 1000;
-            transition: opacity 0.8s ease;
+            z-index: 100;
+            transition: opacity 0.8s ease, visibility 0.8s;
         }
 
         .main-content {
             text-align: center;
-            z-index: 10;
-            position: relative;
+            z-index: 20;
+            background: transparent;
+            padding: 20px;
         }
 
         .founder-tag {
@@ -79,7 +83,7 @@
             margin-bottom: 5px;
             letter-spacing: 4px;
             text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
         }
 
         .sub-tag {
@@ -87,65 +91,76 @@
             font-size: 11px;
             margin-bottom: 30px;
             letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(0,0,0,1);
-            opacity: 0.7;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 1);
         }
 
         .social-icons {
             display: flex;
             justify-content: center;
-            gap: 25px;
+            gap: 30px;
         }
 
         .social-icons a {
             color: #fff;
-            font-size: 24px;
+            font-size: 26px;
             text-decoration: none;
-            transition: 0.3s ease;
+            transition: 0.3s;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
             position: relative;
-            display: inline-block;
         }
 
         .social-icons a:hover {
             color: var(--accent);
-            transform: scale(1.15);
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 15px var(--accent));
         }
 
-        /* Tooltip pour la copie Discord */
+        /* Tooltip Discord */
         #tooltip {
             visibility: hidden;
             background-color: var(--accent);
             color: #000;
-            padding: 4px 10px;
+            padding: 4px 8px;
             position: absolute;
-            bottom: 160%;
+            bottom: 150%;
             left: 50%;
             transform: translateX(-50%);
             font-size: 10px;
-            font-weight: 900;
-            white-space: nowrap;
-            border-radius: 2px;
+            font-weight: bold;
             opacity: 0;
             transition: 0.3s;
+            white-space: nowrap;
         }
 
-        #tooltip.show { visibility: visible; opacity: 1; }
+        #tooltip.show {
+            visibility: visible;
+            opacity: 1;
+        }
 
-        .glitch { animation: pulse 1.5s infinite; letter-spacing: 3px; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .glitch {
+            letter-spacing: 5px;
+            animation: pulse 2s infinite;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
     </style>
 </head>
 <body>
 
-<video muted loop playsinline id="bgVideo" preload="auto">
-    <source src="https://r2.guns.lol/aa29fb22-f7cd-49ad-b346-e0ff98f25e55.mp4" type="video/mp4">
-</video>
-
 <div class="overlay-fx"></div>
 
 <div id="overlay">
-    <div id="statusText" class="glitch" style="color: var(--accent);">[ CLICK TO ENTER ]</div>
+    <div class="glitch" style="color: var(--accent);">[ CLICK TO START ]</div>
 </div>
+
+<video id="bgVideo" preload="auto" loop muted playsinline class="video-background">
+    <source src="https://r2.guns.lol/aa29fb22-f7cd-49ad-b346-e0ff98f25e55.mp4" type="video/mp4">
+</video>
 
 <div class="main-content">
     <div class="founder-tag">Founder @ #RIBE</div>
@@ -172,32 +187,26 @@
     const audio = document.getElementById('myAudio');
     const video = document.getElementById('bgVideo');
 
-    // On lance la vidéo en muet dès qu'on peut pour qu'elle soit déjà en train de jouer derrière le noir
-    video.play().catch(() => {
-        console.log("Lecture auto bloquée, elle démarrera au clic.");
-    });
-
     overlay.addEventListener('click', () => {
-        // Au clic, on active le son et on s'assure que la vidéo joue
-        video.muted = false; 
-        video.play(); 
-        
-        audio.volume = 0.5; // Ajuste le volume ici (0.0 à 1.0)
-        audio.play().catch(e => console.log("Audio bloqué par le navigateur"));
-        
+        // Lancement de l'audio et de la vidéo au clic
+        audio.play().catch(e => console.log("Audio play blocked"));
+        video.muted = false; // Optionnel : enlever le mute de la vidéo si elle a du son
+        video.play();
+
         overlay.style.opacity = '0';
         setTimeout(() => { 
-            overlay.style.display = 'none'; 
+            overlay.style.visibility = 'hidden'; 
         }, 800);
     });
 
     function copyDiscord(element) {
-        // Remplace par ton vrai tag si besoin
-        const discordTag = "@ritabeagle"; 
+        const discordTag = "@ritabeagle";
         navigator.clipboard.writeText(discordTag).then(() => {
             const tooltip = document.getElementById('tooltip');
             tooltip.classList.add('show');
-            setTimeout(() => { tooltip.classList.remove('show'); }, 2000);
+            setTimeout(() => { 
+                tooltip.classList.remove('show'); 
+            }, 2000);
         });
     }
 </script>
