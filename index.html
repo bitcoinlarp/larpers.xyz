@@ -9,7 +9,7 @@
         :root {
             --primary: #ffffff;
             --accent: #ff0000; 
-            --bg: #000000;
+            --bg: #050505;
         }
 
         body, html {
@@ -26,7 +26,7 @@
             justify-content: center;
         }
 
-        /* FIX POUR LES BANDES NOIRES : On force la vidéo à remplir tout l'écran */
+        /* Conteneur Vidéo Plein Écran */
         .video-container {
             position: fixed;
             top: 0;
@@ -34,20 +34,25 @@
             width: 100%;
             height: 100%;
             z-index: -1;
+            background: #000;
         }
 
         .video-background {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* C'est ça qui va supprimer les bandes noires ! */
-            filter: brightness(0.8) contrast(1.1);
+            object-fit: cover;
+            /* On enlève le filter brightness trop bas pour être sûr de voir quelque chose */
+            filter: contrast(1.1) brightness(0.9);
+            display: block;
         }
 
+        /* Overlay pour donner du style sans boucher la vue */
         .overlay-fx {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.4) 150%);
-            z-index: 10;
+            background: linear-gradient(rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.3) 50%);
+            background-size: 100% 4px;
+            z-index: 5;
             pointer-events: none;
         }
 
@@ -76,7 +81,7 @@
             margin-bottom: 5px;
             letter-spacing: 4px;
             text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
         }
 
         .sub-tag {
@@ -84,7 +89,7 @@
             font-size: 11px;
             margin-bottom: 30px;
             letter-spacing: 2px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 0 10px rgba(0,0,0,1);
         }
 
         .social-icons {
@@ -97,8 +102,8 @@
             color: #fff;
             font-size: 26px;
             text-decoration: none;
-            transition: 0.3s;
-            filter: drop-shadow(0 0 8px rgba(0,0,0,0.8));
+            transition: 0.3s ease;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,1));
         }
 
         .social-icons a:hover {
@@ -136,7 +141,7 @@
 </div>
 
 <div class="video-container">
-    <video autoplay muted loop playsinline class="video-background">
+    <video autoplay muted loop playsinline class="video-background" id="bgVideo">
         <source src="https://r2.guns.lol/aa29fb22-f7cd-49ad-b346-e0ff98f25e55.mp4" type="video/mp4">
     </video>
 </div>
@@ -164,9 +169,13 @@
 <script>
     const overlay = document.getElementById('overlay');
     const audio = document.getElementById('myAudio');
+    const video = document.getElementById('bgVideo');
 
     overlay.addEventListener('click', () => {
+        // Lance l'audio et s'assure que la vidéo joue
         audio.play();
+        video.play(); 
+        
         overlay.style.opacity = '0';
         setTimeout(() => { overlay.style.display = 'none'; }, 800);
     });
