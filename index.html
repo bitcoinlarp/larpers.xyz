@@ -2,170 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE JAK ZONE</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Caipirinha Player</title>
     <style>
-        :root {
-            /* Neon "Caramelldansen" Palette */
-            --primary: #ffffff;
-            --accent: #00ff41; 
-            --pink: #ff00ff;
-            --bg: #000000;
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg);
-            color: var(--primary);
-            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; /* Ironic font choice */
-            overflow: hidden;
-        }
-
-        /* Video Background */
-        .video-background {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 0;
-            object-fit: cover;
-            filter: brightness(0.6) saturate(2);
-        }
-
-        /* Overlay Jak Grid */
-        .jak-grid {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            z-index: 2;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-
-        .jak-grid img {
-            width: 100%;
-            height: auto;
-            animation: bounce 0.5s infinite alternate;
-        }
-
-        @keyframes bounce {
-            from { transform: scale(0.8); }
-            to { transform: scale(1.1) rotate(5deg); }
-        }
-
-        #overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
+        body {
             display: flex;
-            align-items: center;
             justify-content: center;
-            cursor: pointer;
-            z-index: 100;
-            transition: opacity 0.5s ease;
+            align-items: center;
+            height: 100vh;
+            background-color: #121212;
+            margin: 0;
         }
-
-        .main-content {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 20;
-            background: rgba(0,0,0,0.6);
-            padding: 2rem;
-            border: 4px solid var(--accent);
-            border-radius: 20px;
-        }
-
-        .title-card {
-            color: var(--pink);
-            font-size: 40px;
-            font-weight: 900;
-            text-transform: uppercase;
-            text-shadow: 3px 3px 0px var(--accent);
-            margin-bottom: 10px;
-        }
-
-        .social-icons a {
-            color: #fff;
-            font-size: 40px;
-            margin: 0 15px;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .social-icons a:hover {
-            color: var(--accent);
-            filter: drop-shadow(0 0 20px var(--accent));
-        }
-
-        .rainbow-text {
-            animation: rainbow 1s infinite;
-        }
-
-        @keyframes rainbow {
-            0% { color: red; }
-            20% { color: yellow; }
-            40% { color: green; }
-            60% { color: blue; }
-            80% { color: purple; }
-            100% { color: red; }
+        video {
+            max-width: 90%;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
     </style>
 </head>
 <body>
 
-<video autoplay muted loop playsinline class="video-background">
-    <source src="background_loop.mp4" type="video/mp4">
-</video>
-
-<div class="jak-grid">
-    <img src="soy1.png" alt="soy">
-    <img src="chud1.png" alt="chud" style="animation-delay: 0.1s">
-    <img src="soy2.png" alt="soy" style="animation-delay: 0.2s">
-    <img src="chud2.png" alt="chud" style="animation-delay: 0.3s">
-</div>
-
-<div id="overlay">
-    <h1 class="rainbow-text">[ CLICK TO ASCEND ]</h1>
-</div>
-
-<div class="main-content">
-    <div class="title-card">CHUD & SOY CENTRAL</div>
-    <p style="letter-spacing: 2px;">FEELING THE CAIPIRINHA BEAT</p>
-
-    <div class="social-icons">
-        <a href="#"><i class="fab fa-discord"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fas fa-biohazard"></i></a>
-    </div>
-</div>
-
-<audio id="myAudio" loop>
-    <source src="caipirinha.mp3" type="audio/mpeg">
-</audio>
-
-<script>
-    const overlay = document.getElementById('overlay');
-    const audio = document.getElementById('myAudio');
-
-    overlay.addEventListener('click', () => {
-        audio.play();
-        overlay.style.opacity = '0';
-        setTimeout(() => { overlay.style.display = 'none'; }, 500);
-        
-        // Bonus: Rapidly change background colors to the beat
-        setInterval(() => {
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ff00ff'];
-            document.body.style.boxShadow = `inset 0 0 100px ${colors[Math.floor(Math.random() * colors.length)]}`;
-        }, 200);
-    });
-</script>
+    <video controls autoplay loop muted width="640">
+        <source src="caipirinha.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 
 </body>
 </html>
