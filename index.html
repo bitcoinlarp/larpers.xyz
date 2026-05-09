@@ -12,23 +12,20 @@
             height: 100%;
             overflow: hidden;
             background-color: black;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: sans-serif;
         }
 
-        /* The Video Background */
         #bg-video {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            /* 'fill' stretches the video to the exact screen dimensions */
             object-fit: fill; 
-            display: none; /* Hidden until button is clicked */
+            display: none;
             z-index: 1;
         }
 
-        /* Click Overlay */
         #overlay {
             position: fixed;
             top: 0;
@@ -73,14 +70,10 @@
         function startParty() {
             const video = document.getElementById('bg-video');
             const overlay = document.getElementById('overlay');
-            
-            // Show video, hide overlay
             video.style.display = 'block';
             overlay.style.display = 'none';
-            
-            // Play with sound
             video.play().catch(function(error) {
-                console.log("Video play failed:", error);
+                console.log(error);
             });
         }
     </script>
