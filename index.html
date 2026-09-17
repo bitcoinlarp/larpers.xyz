@@ -10,19 +10,28 @@
         color: #fff;
         text-align: center;
         font-family: sans-serif;
+        margin: 0;
+        padding: 20px;
       }
       .dosbox-container {
         width: 640px;
         height: 400px;
-        margin: 20px auto;
+        margin: 0 auto 15px auto;
       }
       .dosbox-container > .dosbox-overlay {
         background: url(https://js-dos.com/cdn/DOOM.png);
       }
       button {
-        padding: 8px 16px;
+        padding: 10px 20px;
         font-size: 14px;
         cursor: pointer;
+        background-color: #222;
+        color: #fff;
+        border: 1px solid #555;
+        border-radius: 4px;
+      }
+      button:hover {
+        background-color: #444;
       }
     </style>
   </head>
@@ -30,13 +39,15 @@
     <div id="dosbox"></div>
     <br/>
     <button onclick="dosbox.requestFullScreen();">Make fullscreen</button>
-    
+
     <script type="text/javascript" src="https://js-dos.com/cdn/js-dos-api.js"></script>
     <script type="text/javascript">
       var dosbox = new Dosbox({
         id: "dosbox",
         onload: function (dosbox) {
-          dosbox.run("https://js-dos.com/cdn/upload/DOOM-@evilution.zip", "./doom");
+          dosbox.run("https://js-dos.com/cdn/upload/DOOM-@evilution.zip", "./doom", [
+            "DOOM.EXE"
+          ]);
         },
         onrun: function (dosbox, app) {
           console.log("App '" + app + "' is running");
