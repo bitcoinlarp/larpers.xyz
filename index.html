@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DOOM</title>
   <style>
     * {
@@ -11,14 +10,20 @@
       box-sizing: border-box;
     }
     html, body {
-      width: 100%;
-      height: 100%;
-      background-color: #000;
-      overflow: hidden;
-    }
-    iframe {
       width: 100vw;
       height: 100vh;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    iframe, canvas, #dosbox {
+      width: 100%;
+      height: 100%;
+      max-width: 100vw;
+      max-height: 100vh;
+      object-fit: contain; /* Keeps 4:3 aspect ratio perfectly centered */
       border: none;
     }
   </style>
