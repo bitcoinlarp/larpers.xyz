@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DOOM</title>
+  <title>DOOM II</title>
   <style>
     * {
       margin: 0;
@@ -11,22 +11,28 @@
       box-sizing: border-box;
     }
     html, body {
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       overflow: hidden;
     }
     iframe {
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
+      max-width: 100vw;
+      max-height: 100vh;
+      object-fit: contain;
       border: none;
     }
   </style>
 </head>
 <body>
   <iframe 
-    src="https://js-dos.com/games/doom.exe.html" 
-    allow="autoplay; fullscreen; keyboard"
+    src="https://js-dos.com/games/doom2.exe.html" 
+    allow="autoplay; fullscreen; keyboard; audio"
     scrolling="no">
   </iframe>
 </body>
