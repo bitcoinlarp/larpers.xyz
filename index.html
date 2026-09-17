@@ -2,56 +2,38 @@
 <html lang="en-us">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>DOOM</title>
-    <style type="text/css">
-      body {
-        background-color: #000;
+    <!-- Load js-dos v6 library -->
+    <script src="https://v6.js-dos.com/latest/js-dos.js"></script>
+    <style>
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        background: #000;
         color: #fff;
         text-align: center;
         font-family: sans-serif;
-        margin: 0;
-        padding: 20px;
       }
-      .dosbox-container {
+      #dosbox {
         width: 640px;
         height: 400px;
-        margin: 0 auto 15px auto;
-      }
-      .dosbox-container > .dosbox-overlay {
-        background: url(https://js-dos.com/cdn/DOOM.png);
-      }
-      button {
-        padding: 10px 20px;
-        font-size: 14px;
-        cursor: pointer;
-        background-color: #222;
-        color: #fff;
-        border: 1px solid #555;
-        border-radius: 4px;
-      }
-      button:hover {
-        background-color: #444;
+        margin: 20px auto;
       }
     </style>
   </head>
   <body>
     <div id="dosbox"></div>
-    <br/>
-    <button onclick="dosbox.requestFullScreen();">Make fullscreen</button>
 
-    <script type="text/javascript" src="https://js-dos.com/cdn/js-dos-api.js"></script>
-    <script type="text/javascript">
-      var dosbox = new Dosbox({
-        id: "dosbox",
-        onload: function (dosbox) {
-          dosbox.run("https://js-dos.com/cdn/upload/DOOM-@evilution.zip", "./doom", [
-            "DOOM.EXE"
-          ]);
-        },
-        onrun: function (dosbox, app) {
-          console.log("App '" + app + "' is running");
-        }
+    <script>
+      Dos(document.getElementById("dosbox"), {
+        wdosboxUrl: "https://v6.js-dos.com/latest/wdosbox.js"
+      }).ready((fs, main) => {
+        // 1. Download and extract the Doom ZIP file
+        fs.extract("https://js-dos.com/cdn/upload/DOOM-@evilution.zip").then(() => {
+          // 2. Launch DOOM.EXE automatically inside the extracted files
+          main(["-c", "DOOM.EXE"]);
+        });
       });
     </script>
   </body>
