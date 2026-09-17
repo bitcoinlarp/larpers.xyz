@@ -1,40 +1,33 @@
-<!doctype html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <title>DOOM</title>
-    <!-- Load js-dos v6 library -->
-    <script src="https://v6.js-dos.com/latest/js-dos.js"></script>
-    <style>
-      html, body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        background: #000;
-        color: #fff;
-        text-align: center;
-        font-family: sans-serif;
-      }
-      #dosbox {
-        width: 640px;
-        height: 400px;
-        margin: 20px auto;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="dosbox"></div>
-
-    <script>
-      Dos(document.getElementById("dosbox"), {
-        wdosboxUrl: "https://v6.js-dos.com/latest/wdosbox.js"
-      }).ready((fs, main) => {
-        // 1. Download and extract the Doom ZIP file
-        fs.extract("https://js-dos.com/cdn/upload/DOOM-@evilution.zip").then(() => {
-          // 2. Launch DOOM.EXE automatically inside the extracted files
-          main(["-c", "DOOM.EXE"]);
-        });
-      });
-    </script>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOOM</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      overflow: hidden;
+    }
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <iframe 
+    src="https://js-dos.com/games/doom.exe.html" 
+    allow="autoplay; fullscreen; keyboard"
+    scrolling="no">
+  </iframe>
+</body>
 </html>
