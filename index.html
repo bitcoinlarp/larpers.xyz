@@ -26,6 +26,7 @@
 
       .emscripten canvas {
         border: 0;
+        cursor: pointer;
       }
     </style>
   </head>
@@ -48,9 +49,9 @@
     <div class="emscripten-padding">
       <strong>NOTES:</strong> 
       <ul>
-        <li>If you have problems with the positioning of the mouse, try switching to <b>Fullscreen</b> mode</li>
-        <li>While the browser is loading the program, it may hang up for a while</li>
-        <li>Sometimes you should click on the canvas to capture the mouse</li>
+        <li>Click on the game window to capture the mouse pointer for looking/shooting.</li>
+        <li>Use <b>WASD</b> to move, <b>Shift</b> to run, and <b>Left Click</b> to fire.</li>
+        <li>Use <b>Fullscreen</b> mode for the best mouse tracking experience.</li>
       </ul>
     </div>
 
@@ -121,10 +122,6 @@
       };
 
       $(document).ready(function () {
-        $("#fullscreen").click(function() {
-          Module.requestFullScreen(false, false);
-        });
-
         setTimeout(function () {
           $.ajax({
              url: "https://js-dos.com/dosbox.js",
@@ -313,6 +310,59 @@
       })();
 
       Module['arguments'] = [ '-conf', './dosbox.conf', './DOOM2.EXE' ];
+    </script>
+
+    <!-- Controls, Pointer Lock, and Fullscreen Script -->
+    <script>
+      var canvas = document.getElementById('canvas');
+
+      // Click canvas to lock mouse for aiming/shooting
+      canvas.addEventListener('click', function() {
+        canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
+        canvas.requestPointerLock();
+      });
+
+      // WASD to Arrow Keys Mapping
+      var keyMap = {
+        'KeyW': 38, // Up Arrow
+        'KeyS': 40, // Down Arrow
+        'KeyA': 37, // Left Arrow
+        'KeyD': 39  // Right Arrow
+      };
+
+      // Intercept inputs to prevent scrolling and handle WASD
+      window.addEventListener('keydown', function(e) {
+        if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Tab"].indexOf(e.code) > -1) {
+          e.preventDefault();
+        }
+
+        if (keyMap[e.code]) {
+          e.preventDefault();
+          var event = new KeyboardEvent('keydown', { keyCode: keyMap[e.code], bubbles: true });
+          canvas.dispatchEvent(event);
+        }
+      }, true);
+
+      window.addEventListener('keyup', function(e) {
+        if (keyMap[e.code]) {
+          e.preventDefault();
+          var event = new KeyboardEvent('keyup', { keyCode: keyMap[e.code], bubbles: true });
+          canvas.dispatchEvent(event);
+        }
+      }, true);
+
+      // Browser Native Fullscreen Toggle
+      document.getElementById('fullscreen').addEventListener('click', function() {
+        if (canvas.requestFullscreen) {
+          canvas.requestFullscreen();
+        } else if (canvas.mozRequestFullScreen) {
+          canvas.mozRequestFullScreen();
+        } else if (canvas.webkitRequestFullscreen) {
+          canvas.webkitRequestFullscreen();
+        } else if (canvas.msRequestFullscreen) {
+          canvas.msRequestFullscreen();
+        }
+      });
     </script>
   </body>
 </html>
